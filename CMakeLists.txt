@@ -1,20 +1,30 @@
-cmake_minimum_required(VERSION 3.0.0)
-project(opengl-imgui-cmake-template VERSION 0.1.0)
-#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
-
-link_directories(libs/glfw)
-
-include_directories(libs/glad)
-include_directories(libs/KHR)
-include_directories(libs/imgui)
-include_directories(libs/glfw)
-include_directories(include)
-
-file(GLOB_RECURSE SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
-add_executable(opengl-imgui-cmake-template ${SOURCES})
+cmake_minimum_required(VERSION 3.3)
+project(LearnOpenGL)
 
 find_package(OpenGL REQUIRED)
-target_link_libraries(opengl-imgui-cmake-template PRIVATE ${OPENGL_gl_LIBRARY})
-target_link_libraries(opengl-imgui-cmake-template PRIVATE glfw3)
 
-file(COPY resources DESTINATION /)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
+# Including GLFW
+add_subdirectory(glfw)
+include_directories(glfw/include)
+
+# Including GLAD
+include_directories(glad/include)
+
+set(SOURCE_FILES glad/src/glad.c
+        EBO.cpp
+        shaderClass.cpp
+        VAO.cpp
+        VBO.cpp
+        main.cpp
+        EBO.h
+        shaderClass.h
+        VAO.h
+        VBO.h
+)
+add_definitions(-DCMAKE_EXPORT_COMPILE_COMMANDS=ON)
+add_executable(${CMAKE_PROJECT_NAME} ${SOURCE_FILES})
+
+# Linking GLFW and OGL
+target_link_libraries(${CMAKE_PROJECT_NAME} glfw ${GLFW_LIBRARIES} ${OPENGL_LIBRARY})
